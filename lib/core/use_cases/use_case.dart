@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:equatable/equatable.dart';
 
 import '../error/failure.dart';
 
@@ -10,3 +11,6 @@ import '../error/failure.dart';
 abstract class UseCase<Type, Params> {
   Future<Either<Failure, Type>> call(Params params);
 }
+
+/// Shared method to pass "no params" to the Params generic type when UseCase is implemented
+class NoParams extends Equatable {}
