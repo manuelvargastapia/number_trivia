@@ -45,7 +45,13 @@ void main() {
     // ACT
     // Store result from calling unimplemented method of use case (because of TDD)
     // We need to create this method in GetConcreteNumberTrivia class
-    final result = await useCase.execute(number: testNumber);
+    // final result = await useCase.execute(number: testNumber);
+    //
+    // Refactoring using Dart Callable Class:
+    // Now, instead of execute(), we're calling to call().
+    // This time, useCase receives a Params object, with a number as an argument for
+    // its cnstructor.
+    final result = await useCase(Params(number: testNumber));
 
     // ASSERT
     // "The result should be the right side of either with test NumberTrivia instance inside"
