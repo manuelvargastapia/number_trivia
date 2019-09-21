@@ -8,7 +8,7 @@ import 'package:number_trivia/features/domain/use_cases/get_concrete_number_triv
 // In the TDD methodology, tests are always written before functional code.
 // In this case, also, we're mocking abstract class.
 
-/// Use cases test for execute(number) method of GetConcreteNumberTrivia class.
+/// Use cases test for execute(number) (former, now call(Params)) method of GetConcreteNumberTrivia class.
 class MockNumberTriviaRepository extends Mock
     implements NumberTriviaRepository {}
 
