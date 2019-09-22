@@ -9,3 +9,12 @@ import 'package:equatable/equatable.dart';
 abstract class Failure extends Equatable {
   Failure([List properties = const <dynamic>[]]) : super(properties);
 }
+
+// General failures
+
+// We want to map all the Exceptions to Failures. So the Repository (Data layer) can
+// convert any Exception to a Failure object.
+
+class ServerFailure extends Failure {}
+
+class CacheFailure extends Failure {}
