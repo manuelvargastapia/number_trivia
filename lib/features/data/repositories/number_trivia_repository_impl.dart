@@ -10,6 +10,9 @@ import '../data_sources/number_trivia_local_data_source.dart';
 import '../data_sources/number_trivia_remote_data_source.dart';
 import '../models/number_trivia_model.dart';
 
+/// Typedef for High Order Function used in refactoring
+typedef Future<NumberTriviaModel> _ConcreteOrRandomChooser();
+
 /// Implementation of the abstract class NumberTriviaRepository (Domain layer).
 
 class NumberTriviaRepositoryImpl extends NumberTriviaRepository {
@@ -26,15 +29,14 @@ class NumberTriviaRepositoryImpl extends NumberTriviaRepository {
   /// Highr Order Function to refactor duplicated code between getConcreteNumberTrivia()
   /// and getRandomNumberTrivia()
   Future<Either<Failure, NumberTrivia>> _getTrivia(
-      Future<NumberTriviaModel> Function() getConcreteOrRandom) async {
+    _ConcreteOrRandomChooser getConcreteOrRandom,
+  ) async {
     if (await networkInfo.isConnected) {
       try {
         // Passing "should return remote data when the call to remote data is successful"
         final NumberTriviaModel remoteTrivia = await getConcreteOrRandom();
-
         // Passing "should cache the data locally when the call to remote data is successful"
         localDataSource.cacheNumberTrivia(remoteTrivia);
-
         return Right(remoteTrivia);
       } on ServerException {
         // Passing "should return ServerFailure when the call to remote data is unsuccessful"
@@ -57,18 +59,13 @@ class NumberTriviaRepositoryImpl extends NumberTriviaRepository {
   /// in case of exceptions.
   @override
   Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(
-      int number) async {
-    return await _getTrivia(() {
-      return remoteDataSource.getConcreteNumberTrivia(number);
-    });
-  }
+    int number,
+  ) async =>
+      await _getTrivia(() => remoteDataSource.getConcreteNumberTrivia(number));
 
   /// Convert raw external data retrieved for Data Suurces into a NumberTrivia or a Failure,
   /// in case of exceptions.
   @override
-  Future<Either<Failure, NumberTrivia>> getRandomNumberTrivia() async {
-    return await _getTrivia(() {
-      return remoteDataSource.getRandomNumberTrivia();
-    });
-  }
+  Future<Either<Failure, NumberTrivia>> getRandomNumberTrivia() async =>
+      await _getTrivia(() => remoteDataSource.getRandomNumberTrivia());
 }
